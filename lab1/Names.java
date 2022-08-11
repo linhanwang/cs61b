@@ -36,7 +36,7 @@ class Names {
     System.out.println(first + " equals john (ignoring case) is " 
 		       + first.equalsIgnoreCase("john"));
     System.out.println("The character at index 3 in " + middle + " is " +
-		       middle.substring(3,1));
+		       middle.substring(3,4));
     System.out.println("The index of \"gerald\" within " + middle + " is " +
 		       middle.indexOf("gerald"));
     System.out.println("The index of \"gerald\" within " + last + " is " +
