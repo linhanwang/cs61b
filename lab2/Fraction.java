@@ -40,17 +40,13 @@ class Fraction {
   /** Constructs a Fraction 0/1. 
    */
   public Fraction() {
-    numberOfFractions++;
-    numerator = 0;
-    denominator = 1;
+    this(0, 1);
   }
 
   /** Copies the Fraction "original".
    */
   public Fraction(Fraction original) {
-    numberOfFractions++;
-    numerator = 0;
-    denominator = 1;
+    this(original.numerator, original.denominator);
   }
 
   /** Converts this Fraction to a string format:  "numerator/denominator."
