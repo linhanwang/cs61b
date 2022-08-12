@@ -28,6 +28,21 @@ class OpenCommercial {
     inputLine = keyboard.readLine();
 
     /* Replace this comment with your solution.  */
+    String urlStr = "https://www." + inputLine + ".com/";
+    URL url = new URL(urlStr);
+    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+    
+    String[] webContents = new String[5];
+    int i = 0;
+    while ((webContents[i++] = in.readLine()) != null)
+        if (i > 4)
+            break;
+    
+    in.close();
+    
+    if (i != 5) System.out.println("Something weired happened!");
 
+    while (i > 0) 
+        System.out.println(webContents[--i]);
   }
 }
