@@ -7,7 +7,7 @@ import java.io.*;
 class Fraction {
 
   /* private fields within a Fraction. */
-  private int numberOfFractions = 0;
+  private static int numberOfFractions = 0;
 
   private int numerator;
   private int denominator;
@@ -80,7 +80,7 @@ class Fraction {
       System.out.println("Fatal error:  Negative numerator.");
       System.exit(0);
     }
-    numerator = numerator;
+    this.numerator = numerator;
   }
 
   /** Returns the number of Fraction objects in existence.
