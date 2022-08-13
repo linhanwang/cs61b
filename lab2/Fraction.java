@@ -98,7 +98,11 @@ class Fraction {
    */
   static private int gcd(int x, int y) {
     /* Replace the following line with your solution. */
-    return 1;
+      if (y == 0) {
+          return x;
+      }
+
+    return gcd(y, x % y);
   }
 
   /** Put the Fraction class through some tests.
