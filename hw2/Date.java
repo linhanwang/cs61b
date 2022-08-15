@@ -30,7 +30,23 @@ class Date {
    *  @return true if and only if the input year is a leap year.
    */
   public static boolean isLeapYear(int year) {
-    return true;                        // replace this line with your solution
+    if (year < 0) {
+        return false;
+    }
+
+    if (year % 400 == 0) {
+        return true;
+    }
+
+    if (year % 100 == 0) {
+        return false;
+    }
+
+    if (year % 4 == 0) {
+        return true;
+    }
+
+    return false;                        // replace this line with your solution
   }
 
   /** Returns the number of days in a given month.
@@ -39,6 +55,30 @@ class Date {
    *  @return the number of days in the given month.
    */
   public static int daysInMonth(int month, int year) {
+    switch (month) {
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
+            return 31;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            return 30;
+        case 2:
+            if (isLeapYear(year)) {
+                return 29;
+            } else {
+                return 28;
+            }
+        default:
+            break;
+    }
+
     return 0;                           // replace this line with your solution
   }
 
@@ -48,6 +88,18 @@ class Date {
    *  Years prior to A.D. 1 are NOT valid.
    */
   public static boolean isValidDate(int month, int day, int year) {
+    if (year < 1) {
+        return false;
+    }
+
+    if (month < 1 || month > 12) {
+        return false;
+    }
+    
+    if (day < 1 || day > daysInMonth(month, year)) {
+        return false;
+    }
+
     return true;                        // replace this line with your solution
   }
 
@@ -93,6 +145,51 @@ class Date {
   }
 
   public static void main(String[] argv) {
+    System.out.println("Testing isLeapYear:");
+    System.out.println("2000 " + Date.isLeapYear(2000));
+    System.out.println("1600 " + Date.isLeapYear(1600));
+    System.out.println("1800 " + Date.isLeapYear(1800));
+    System.out.println("1900 " + Date.isLeapYear(1900));
+    System.out.println("2004 " + Date.isLeapYear(2004));
+    System.out.println("1999 " + Date.isLeapYear(1999));
+
+    System.out.println("\nTesting daysInMonth:");
+    System.out.println(Date.daysInMonth(1, 2001));
+    System.out.println(Date.daysInMonth(2, 2001));
+    System.out.println(Date.daysInMonth(3, 2001));
+    System.out.println(Date.daysInMonth(4, 2001));
+    System.out.println(Date.daysInMonth(5, 2001));
+    System.out.println(Date.daysInMonth(6, 2001));
+    System.out.println(Date.daysInMonth(7, 2001));
+    System.out.println(Date.daysInMonth(8, 2001));
+    System.out.println(Date.daysInMonth(9, 2001));
+    System.out.println(Date.daysInMonth(10, 2001));
+    System.out.println(Date.daysInMonth(11, 2001));
+    System.out.println(Date.daysInMonth(12, 2001));
+    System.out.println(Date.daysInMonth(13, 2001));
+
+    System.out.println(Date.daysInMonth(1, 2000));
+    System.out.println(Date.daysInMonth(2, 2000));
+    System.out.println(Date.daysInMonth(3, 2000));
+    System.out.println(Date.daysInMonth(4, 2000));
+    System.out.println(Date.daysInMonth(5, 2000));
+    System.out.println(Date.daysInMonth(6, 2000));
+    System.out.println(Date.daysInMonth(7, 2000));
+    System.out.println(Date.daysInMonth(8, 2000));
+    System.out.println(Date.daysInMonth(9, 2000));
+    System.out.println(Date.daysInMonth(10, 2000));
+    System.out.println(Date.daysInMonth(11, 2000));
+    System.out.println(Date.daysInMonth(12, 2000));
+    System.out.println(Date.daysInMonth(13, 2000));
+
+    System.out.println("\nTesting isValidDate:");
+    System.out.println(Date.isValidDate(2, 2, 2) + " true");
+    System.out.println(Date.isValidDate(2, 2, 0) + " false");
+    System.out.println(Date.isValidDate(13, 2, 2) + " false");
+    System.out.println(Date.isValidDate(0, 2, 2) + " false");
+    System.out.println(Date.isValidDate(2, 0, 2000) + " false");
+    System.out.println(Date.isValidDate(2, 29, 2001) + " false");
+
     System.out.println("\nTesting constructors.");
     Date d1 = new Date(1, 1, 1);
     System.out.println("Date should be 1/1/1: " + d1);
