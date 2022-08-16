@@ -32,7 +32,14 @@ class Date {
    *  a valid date, the program halts with an error message.
    */
   public Date(String s) {
-
+    String[] arr = s.split("/");
+    if (arr.length != 3) {
+        System.exit(0);
+    }
+    
+    this.month = Integer.parseInt(arr[0]);
+    this.day = Integer.parseInt(arr[1]);
+    this.year = Integer.parseInt(arr[2]);
   }
 
   /** Checks whether the given year is a leap year.
@@ -125,14 +132,44 @@ class Date {
    *  @return true if and only if this Date is before d. 
    */
   public boolean isBefore(Date d) {
-    return true;                        // replace this line with your solution
+    if (equals(d)) {
+        return false;
+    }
+
+    if (d.year > this.year) {
+        return true;
+    } else if (d.year < this.year) {
+        return false;
+    }
+
+    if (d.month > this.month) {
+        return true;
+    } else if (d.month < this.month) {
+        return false;
+    }
+
+    if (d.day > this.day) {
+        return true;
+    } else if (d.day < this.day) {
+        return false;
+    }
+
+    return false;                        // replace this line with your solution
   }
 
   /** Determines whether this Date is after the Date d.
    *  @return true if and only if this Date is after d. 
    */
   public boolean isAfter(Date d) {
-    return true;                        // replace this line with your solution
+    if (equals(d)) {
+        return false;
+    }
+
+    return !isBefore(d);                        // replace this line with your solution
+  }
+
+  public boolean equals(Date d) {
+    return this.month == d.month && this.day == d.day && this.year == d.year;
   }
 
   /** Returns the number of this Date in the year.
@@ -141,7 +178,14 @@ class Date {
    *  year.)
    */
   public int dayInYear() {
-    return 0;                           // replace this line with your solution
+    int ret = 0;
+    for (int i = 1; i < this.month; i++) {
+        ret += daysInMonth(i, this.year);
+    }
+
+    ret += this.day;
+
+    return ret;                           // replace this line with your solution
   }
 
   /** Determines the difference in days between d and this Date.  For example,
@@ -150,7 +194,28 @@ class Date {
    *  @return the difference in days between d and this date.
    */
   public int difference(Date d) {
-    return 0;                           // replace this line with your solution
+    if (equals(d)) {
+        return 0;
+    }
+
+    if (isBefore(d)) {
+        return -d.difference(this);
+    }
+
+    if (this.year == d.year) {
+        return this.dayInYear() - d.dayInYear();
+    }
+
+    int first_part = d.dayInYear();
+
+    int second_part = this.dayInYear();
+
+    int third_part = 0;
+    for (int i = d.year; i < this.year; i++) {
+        third_part += isLeapYear(i) ? 366 : 365;
+    }
+
+    return third_part + second_part - first_part;                           // replace this line with your solution
   }
 
   public static void main(String[] argv) {
@@ -201,7 +266,11 @@ class Date {
 
     System.out.println("\nTesting toString");
     System.out.println(new Date(3, 2, 2021));
-    System.out.println(new Date(3, 32, 2021));
+    // System.out.println(new Date(3, 32, 2021));
+
+    System.out.println("\nTesting dayInYear");
+    Date myDate1 = new Date(12, 31, 2000);
+    System.out.println(myDate1.dayInYear());
 
     System.out.println("\nTesting constructors.");
     Date d1 = new Date(1, 1, 1);
