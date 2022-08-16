@@ -5,6 +5,9 @@ import java.io.*;
 class Date {
 
   /* Put your private data fields here. */
+  private int month;
+  private int day;
+  private int year;
 
   /** Constructs a date with the given month, day and year.   If the date is
    *  not valid, the entire program will halt with an error message.
@@ -13,7 +16,13 @@ class Date {
    *  @param year is the year in question, with no digits omitted.
    */
   public Date(int month, int day, int year) {
+    if (!isValidDate(month, day, year)) {
+        System.exit(0);
+    }
 
+    this.month = month;
+    this.day = day;
+    this.year = year;
   }
 
   /** Constructs a Date object corresponding to the given string.
@@ -109,7 +118,7 @@ class Date {
    *  @return a String representation of this date.
    */
   public String toString() {
-    return "stuff";                     // replace this line with your solution
+    return this.month + "/" + this.day + "/" + this.year;                     // replace this line with your solution
   }
 
   /** Determines whether this Date is before the Date d.
@@ -189,6 +198,10 @@ class Date {
     System.out.println(Date.isValidDate(0, 2, 2) + " false");
     System.out.println(Date.isValidDate(2, 0, 2000) + " false");
     System.out.println(Date.isValidDate(2, 29, 2001) + " false");
+
+    System.out.println("\nTesting toString");
+    System.out.println(new Date(3, 2, 2021));
+    System.out.println(new Date(3, 32, 2021));
 
     System.out.println("\nTesting constructors.");
     Date d1 = new Date(1, 1, 1);
