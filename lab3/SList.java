@@ -124,12 +124,29 @@ public class SList {
 
   public static void main (String[] args) {
     // Fill in your solution for Part I here.
-
+    
+    testInserts();
     testEmpty();
     testAfterInsertFront();
     testAfterInsertEnd();
   }
 
+  /**
+   * testInserts() tests toString() insertFront() insertEnd()
+   * */
+  private static void testInserts() {
+    SList lst1 = new SList();
+    lst1.insertFront(Integer.valueOf(6));
+    lst1.insertEnd(Integer.valueOf(9));
+    lst1.insertEnd(Integer.valueOf(12));
+
+    System.out.println(lst1);
+
+    lst1.insertFront(Integer.valueOf(3));
+    lst1.insertEnd(Integer.valueOf(15));
+
+    System.out.println(lst1);
+  }
     
   /**
    *  testEmpty() tests toString(), isEmpty(), length(), insertFront(), and
