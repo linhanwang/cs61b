@@ -142,6 +142,12 @@ public class SList {
 
   public void twin() {
     // Fill in your solution here.  (Ours is seven lines long.)
+    SListNode node = head;
+    while (node != null) {
+        SListNode newNode = new SListNode(node.item, node.next);
+        node.next = newNode;
+        node = newNode.next;
+    }
   }
 
   /**
