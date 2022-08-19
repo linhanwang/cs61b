@@ -112,6 +112,21 @@ public class SList {
 
   public void squish() {
     // Fill in your solution here.  (Ours is eleven lines long.)
+    if (size < 2) {
+        return;
+    }
+    
+    SListNode slow = head;
+    SListNode fast = slow.next;
+    while (fast != null) {
+        if (slow.item.equals(fast.item)) {
+            slow.next = fast.next;
+            fast = slow.next;
+        } else {
+            slow = fast;
+            fast = fast.next;
+        }
+    }
   }
 
   /**
