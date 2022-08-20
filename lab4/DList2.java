@@ -89,6 +89,13 @@ public class DList2 {
    */
   public void removeFront() {
     // Your solution here.
+    if (size == 0) {
+        return;
+    }
+
+    head.next.next.prev = head;
+    head.next = head.next.next;
+    size--;
   }
 
   /**
