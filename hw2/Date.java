@@ -168,7 +168,11 @@ class Date {
     return !isBefore(d);                        // replace this line with your solution
   }
 
-  public boolean equals(Date d) {
+  public boolean equals(Object o) {
+    if (!(o instanceof Date)) {
+        return false;
+    }
+    Date d = (Date)o;
     return this.month == d.month && this.day == d.day && this.year == d.year;
   }
 
