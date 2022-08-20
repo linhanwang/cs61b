@@ -68,6 +68,18 @@ public class DList1 {
    */
   public void insertFront(int i) {
     // Your solution here.
+    DListNode1 node = new DListNode1(i);
+    if (size == 0) {
+        head = node;
+        tail = node;
+        size = 1;
+        return;
+    }
+
+    node.next = head;
+    head.prev = node;
+    head = node;
+    size++;
   }
 
   /**
@@ -159,6 +171,8 @@ public class DList1 {
       System.out.println("size is wrong.");
     }
 
+    l.insertFront(7);
+    System.out.println("\nInserting 7 at front.\nList with 7, 8 and 9 is " + l);
 
 
     l = new DList1(1, 2);
