@@ -88,6 +88,20 @@ public class DList1 {
    */
   public void removeFront() {
     // Your solution here.
+    if (size == 0) {
+        return;
+    }
+
+    if (size == 1) {
+        head = null;
+        tail = null;
+        size = 0;
+        return;
+    }
+    
+    head = head.next;
+    head.prev = null;
+    size--;
   }
 
   /**
