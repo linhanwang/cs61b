@@ -14,7 +14,7 @@ public class DListNode {
    *  DO NOT CHANGE THE FOLLOWING FIELD DECLARATIONS.
    */
 
-  public int item;
+  public Object item;
   public DListNode prev;
   public DListNode next;
 
@@ -22,13 +22,13 @@ public class DListNode {
    *  DListNode() constructor.
    */
   DListNode() {
-    item = 0;
+    item = null;
     prev = null;
     next = null;
   }
 
-  DListNode(int i) {
-    item = i;
+  DListNode(Object o) {
+    item = o;
     prev = null;
     next = null;
   }

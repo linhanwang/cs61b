@@ -33,7 +33,6 @@ public class DList {
    */
   public DList() {
     head = new DListNode();
-    head.item = Integer.MIN_VALUE;
     head.next = head;
     head.prev = head;
     size = 0;
@@ -42,9 +41,8 @@ public class DList {
   /**
    *  DList() constructor for a one-node DList.
    */
-  public DList(int a) {
+  public DList(Object a) {
     head = new DListNode();
-    head.item = Integer.MIN_VALUE;
     head.next = new DListNode();
     head.next.item = a;
     head.prev = head.next;
@@ -56,9 +54,8 @@ public class DList {
   /**
    *  DList() constructor for a two-node DList.
    */
-  public DList(int a, int b) {
+  public DList(Object a, Object b) {
     head = new DListNode();
-    head.item = Integer.MIN_VALUE;
     head.next = new DListNode();
     head.next.item = a;
     head.prev = new DListNode();
@@ -73,14 +70,26 @@ public class DList {
   /**
    *  insertFront() inserts an item at the front of a DList.
    */
-  public void insertFront(int i) {
+  public void insertFront(Object o) {
     // Your solution here.
-    DListNode node = new DListNode(i);
+    DListNode node = new DListNode(o);
     node.next = head.next;
     node.prev = head;
     head.next.prev = node;
     head.next = node;
     size++;
+  }
+
+  /**
+   *  insertEnd() inserts an item at the end of a DList.
+   */
+  public void insertEnd(Object o) {
+      DListNode node = new DListNode(o);
+      node.prev = head.prev;
+      node.next = head;
+      head.prev.next = node;
+      head.prev = node;
+      size++;
   }
 
   /**
@@ -96,6 +105,18 @@ public class DList {
     head.next.next.prev = head;
     head.next = head.next.next;
     size--;
+  }
+
+  /**
+   *  removeEnd() removes the last item (and last non-sentinel node) from a 
+   *  DList. If the list is empty, do nothing.
+   * */
+  public void removeEnd() {
+      if (size == 0) return;
+
+      head.prev.prev.next = head;
+      head.prev = head.prev.prev;
+      size--;
   }
 
   /**
@@ -123,13 +144,13 @@ public class DList {
 
     l.insertFront(9);
     System.out.println("\nInserting 9 at front.\nList with 9 is " + l);
-    if (l.head.next.item != 9) {
+    if ((Integer)l.head.next.item != 9) {
       System.out.println("head.next.item is wrong.");
     }
     if (l.head.next.prev != l.head) {
       System.out.println("head.next.prev is wrong.");
     }
-    if (l.head.prev.item != 9) {
+    if ((Integer)l.head.prev.item != 9) {
       System.out.println("head.prev.item is wrong.");
     }
     if (l.head.prev.next != l.head) {
@@ -141,13 +162,13 @@ public class DList {
 
     l.insertFront(8);
     System.out.println("\nInserting 8 at front.\nList with 8 and 9 is " + l);
-    if (l.head.next.item != 8) {
+    if ((Integer)l.head.next.item != 8) {
       System.out.println("head.next.item is wrong.");
     }
     if (l.head.next.prev != l.head) {
       System.out.println("head.next.prev is wrong.");
     }
-    if (l.head.prev.item != 9) {
+    if ((Integer)l.head.prev.item != 9) {
       System.out.println("head.prev.item is wrong.");
     }
     if (l.head.prev.next != l.head) {
@@ -171,13 +192,13 @@ public class DList {
 
     l.removeFront();
     System.out.println("\nList with 2 is " + l);
-    if (l.head.next.item != 2) {
+    if ((Integer)l.head.next.item != 2) {
       System.out.println("head.next.item is wrong.");
     }
     if (l.head.next.prev != l.head) {
       System.out.println("head.next.prev is wrong.");
     }
-    if (l.head.prev.item != 2) {
+    if ((Integer)l.head.prev.item != 2) {
       System.out.println("head.prev.item is wrong.");
     }
     if (l.head.prev.next != l.head) {
@@ -210,6 +231,16 @@ public class DList {
     if (l.size != 0) {
       System.out.println("size is wrong.");
     }
+
+    l.insertEnd(2);
+    l.insertEnd(3);
+    l.insertEnd(4);
+    l.insertEnd(5);
+    l.insertEnd(6);
+    System.out.println(l);
+    l.removeEnd();
+    l.removeEnd();
+    System.out.println(l);
   }
 
 }
