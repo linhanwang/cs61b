@@ -21,7 +21,13 @@ public class PixImage {
    *  Define any variables associated with a PixImage object here.  These
    *  variables MUST be private.
    */
+  private static final int kRed = 0;
+  private static final int kGreen = 1;
+  private static final int kBlue = 2;
+  private static final int[][] gxCoeff = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
+  private static final int[][] gyCoeff = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 
+  private short[][][] image;
 
 
 
@@ -34,6 +40,18 @@ public class PixImage {
    */
   public PixImage(int width, int height) {
     // Your solution here.
+    if (width <= 0 || height <= 0) {
+        System.exit(0);
+    }
+
+    image = new short[width][height][3];
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            for (int i = 0; i < 3; ++i) {
+                image[x][y][i] = 0;
+            }
+        }
+    }
   }
 
   /**
@@ -43,7 +61,7 @@ public class PixImage {
    */
   public int getWidth() {
     // Replace the following line with your solution.
-    return 1;
+    return image.length;
   }
 
   /**
@@ -53,7 +71,7 @@ public class PixImage {
    */
   public int getHeight() {
     // Replace the following line with your solution.
-    return 1;
+    return image[0].length;
   }
 
   /**
@@ -65,7 +83,7 @@ public class PixImage {
    */
   public short getRed(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return image[x][y][kRed];
   }
 
   /**
@@ -77,7 +95,7 @@ public class PixImage {
    */
   public short getGreen(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return image[x][y][kGreen];
   }
 
   /**
@@ -89,7 +107,7 @@ public class PixImage {
    */
   public short getBlue(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return image[x][y][kBlue];
   }
 
   /**
@@ -107,6 +125,13 @@ public class PixImage {
    */
   public void setPixel(int x, int y, short red, short green, short blue) {
     // Your solution here.
+    image[x][y][kRed] = red;
+    image[x][y][kGreen] = green;
+    image[x][y][kBlue] = blue;
+  }
+  
+  String pixelToString(int x, int y) {
+    return "(" + image[x][y][kRed] + "," + image[x][y][kGreen] + "," + image[x][y][kBlue] + ")";
   }
 
   /**
@@ -120,7 +145,16 @@ public class PixImage {
    */
   public String toString() {
     // Replace the following line with your solution.
-    return "";
+    String ret = "{";
+    for (int x = 0; x < getWidth(); x++) {
+        ret += "[";
+        for (int y = 0; y < getHeight(); y++) {
+            ret += pixelToString(x, y) + " ";
+        }
+        ret += "]\n";
+    }
+    ret += "}\n";
+    return ret;
   }
 
   /**
@@ -154,7 +188,80 @@ public class PixImage {
    */
   public PixImage boxBlur(int numIterations) {
     // Replace the following line with your solution.
-    return this;
+    PixImage oldImage = this;
+    PixImage newImage;
+    for (int i = 0; i < numIterations; i++) {
+        newImage = new PixImage(getWidth(), getHeight());
+        for (int j = 0; j < 3; ++j) {
+            // 4 corner
+            newImage.image[0][0][j] = (short)((
+                    oldImage.image[0][0][j] + 
+                    oldImage.image[0][1][j] +
+                    oldImage.image[1][0][j] +
+                    oldImage.image[1][1][j]) / 4);
+
+            newImage.image[0][getHeight()-1][j] = (short)((
+                    oldImage.image[0][getHeight()-1][j] + 
+                    oldImage.image[0][getHeight()-2][j] +
+                    oldImage.image[1][getHeight()-1][j] +
+                    oldImage.image[1][getHeight()-2][j]) / 4);
+
+            newImage.image[getWidth()-1][getHeight()-1][j] = (short)((
+                    oldImage.image[getWidth()-1][getHeight()-1][j] + 
+                    oldImage.image[getWidth()-1][getHeight()-2][j] +
+                    oldImage.image[getWidth()-2][getHeight()-1][j] +
+                    oldImage.image[getWidth()-2][getHeight()-2][j]) / 4);
+
+            newImage.image[getWidth()-1][0][j] = (short)((
+                    oldImage.image[getWidth()-1][0][j] + 
+                    oldImage.image[getWidth()-1][1][j] +
+                    oldImage.image[getWidth()-2][0][j] +
+                    oldImage.image[getWidth()-2][1][j]) / 4);
+
+            // up & down
+            for (int x = 1; x < getWidth()-1; x++) {
+                int sumUp = 0;
+                int sumDown = 0;
+                for (int k = 0; k < 3; k++) {
+                    sumUp += oldImage.image[x + k - 1][0][j];
+                    sumUp += oldImage.image[x + k - 1][1][j];
+                    sumDown += oldImage.image[x + k - 1][getHeight()-2][j];
+                    sumDown += oldImage.image[x + k - 1][getHeight()-1][j];
+                }
+                newImage.image[x][0][j] = (short)(sumUp / 6);
+                newImage.image[x][getHeight()-1][j] = (short)(sumDown / 6);
+            }
+
+            // left & right
+            for (int y = 1; y < getHeight() - 1; y++) {
+                int sumLeft = 0;
+                int sumRight = 0;
+                for (int k = 0; k < 3; ++k) {
+                    sumLeft += oldImage.image[0][y + k - 1][j];
+                    sumLeft += oldImage.image[1][y + k - 1][j];
+                    sumRight += oldImage.image[getWidth()-1][y + k - 1][j];
+                    sumRight += oldImage.image[getWidth()-2][y + k - 1][j];
+                }
+                newImage.image[0][y][j] = (short)(sumLeft / 6);
+                newImage.image[getWidth()-1][y][j] = (short)(sumRight / 6);
+            }
+
+            // middle
+            for (int x = 1; x < getWidth()-1; x++) {
+                for (int y = 1; y < getHeight()-1; y++) {
+                    int sum = 0;
+                    for (int xi = 0; xi < 3; xi++) {
+                        for (int yi = 0; yi < 3; yi++) {
+                            sum += oldImage.image[x+xi-1][y+yi-1][j];
+                        }
+                    }
+                    newImage.image[x][y][j] = (short)(sum/9);
+                }
+            }
+        }
+        oldImage = newImage;
+    }
+    return oldImage;
   }
 
   /**
@@ -199,11 +306,58 @@ public class PixImage {
    */
   public PixImage sobelEdges() {
     // Replace the following line with your solution.
-    return this;
+    int[][] gray = new int[getWidth()][getHeight()];
+    for (int x = 0; x < getWidth(); x++) {
+        for (int y = 0; y < getHeight(); y++) {
+            gray[x][y] = mag2gray(calcEnergy(x, y));
+        }
+    }
+
+    return array2PixImage(gray);
     // Don't forget to use the method mag2gray() above to convert energies to
     // pixel intensities.
   }
 
+  private short pixelWithRefelection(int x, int y, int color) {
+    if (x == -1) {
+        x = 0;
+    }
+
+    if (x == getWidth()) {
+        x = getWidth() - 1;
+    }
+
+    if (y == -1) {
+        y = 0;
+    }
+
+    if (y == getHeight()) {
+        y = getHeight() - 1;
+    }
+
+    return image[x][y][color];
+  }
+
+  private long calcEnergy(int x, int y) {
+    long energy = 0;
+    for (int color = 0; color < 3; color++) {
+        long gx = calcDotProduct(x, y, gxCoeff, color);
+        long gy = calcDotProduct(x, y, gyCoeff, color);
+        energy += gx*gx + gy*gy;
+    }
+
+    return energy;
+  }
+
+  private long calcDotProduct(int x, int y, int[][] matrix, int color) {
+      long product = 0;
+      for (int i = 0; i < 3; i++) {
+          for (int j = 0; j < 3; j++) {
+              product += matrix[i][j] * pixelWithRefelection(x+i-1, y+j-1, color);
+          }
+      }
+      return product;
+  }
 
   /**
    * TEST CODE:  YOU DO NOT NEED TO FILL IN ANY METHODS BELOW THIS POINT.
