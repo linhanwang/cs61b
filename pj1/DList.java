@@ -141,6 +141,21 @@ public class DList {
       size--;
   }
 
+  /**
+   *  removeBefore() removes the item before a node.
+   * */
+  public void removeBefore(DListNode node) {
+      node.prev.prev.next = node;
+      node.prev = node.prev.prev;
+  }
+  /**
+   *  removeAfter() removes the item after a node.
+   * */
+  public void removeAfter(DListNode node) {
+      node.next.next.prev = node;
+      node.next = node.next.next;
+  }
+
   public DListNode getHead() {
       return head;
   }
@@ -264,14 +279,25 @@ public class DList {
     l.insertEnd(5);
     l.insertEnd(6);
     System.out.println(l);
+    
     l.removeEnd();
     l.removeEnd();
     System.out.println(l);
+    
     l.insertBefore(l.head.prev, 10);
     l.insertBefore(l.head.prev, 11);
     System.out.println(l);
+    
     l.insertAfter(l.head.next, 100);
     l.insertAfter(l.head.next, 101);
+    System.out.println(l);
+    
+    l.removeBefore(l.head.prev);
+    l.removeBefore(l.head.prev);
+    System.out.println(l);
+
+    l.removeAfter(l.head.next);
+    l.removeAfter(l.head.next);
     System.out.println(l);
   }
 
