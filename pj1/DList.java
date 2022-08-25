@@ -93,6 +93,28 @@ public class DList {
   }
 
   /**
+   *  insertBefore() inserts an item before a node.
+   * */
+  public void insertBefore(DListNode node, Object o) {
+    DListNode newNode = new DListNode(o);
+    newNode.next = node;
+    newNode.prev = node.prev;
+    node.prev.next = newNode;
+    node.prev = newNode;
+  }
+
+  /**
+   *  insertAfter() inserts an item after a node.
+   * */
+  public void insertAfter(DListNode node, Object o) {
+      DListNode newNode = new DListNode(o);
+      newNode.prev = node;
+      newNode.next = node.next;
+      node.next.prev = newNode;
+      node.next = newNode;
+  }
+
+  /**
    *  removeFront() removes the first item (and first non-sentinel node) from
    *  a DList.  If the list is empty, do nothing.
    */
@@ -117,6 +139,10 @@ public class DList {
       head.prev.prev.next = head;
       head.prev = head.prev.prev;
       size--;
+  }
+
+  public DListNode getHead() {
+      return head;
   }
 
   /**
@@ -240,6 +266,12 @@ public class DList {
     System.out.println(l);
     l.removeEnd();
     l.removeEnd();
+    System.out.println(l);
+    l.insertBefore(l.head.prev, 10);
+    l.insertBefore(l.head.prev, 11);
+    System.out.println(l);
+    l.insertAfter(l.head.next, 100);
+    l.insertAfter(l.head.next, 101);
     System.out.println(l);
   }
 
