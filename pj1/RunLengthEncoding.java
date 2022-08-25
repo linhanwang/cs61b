@@ -23,14 +23,45 @@
 
 import java.util.Iterator;
 
+class EncodingItem {
+  int index;
+  int runLength;
+  
+  int red;
+  int green;
+  int blue;
+
+  public EncodingItem() {
+      this.index = 0;
+      this.runLength = 0;
+      this.red = 0;
+      this.green = 0;
+      this.blue = 0;
+  }
+
+  public EncodingItem(int index, int runLength, int red, int green, int blue) {
+      this.index = index;
+      this.runLength = runLength;
+      this.red = red;
+      this.green = green;
+      this.blue = blue;
+  }
+
+  public String toString() {
+      return "(" + index + ", " + runLength + ", " + red + ", " + green + ", "
+          + blue + ")";
+  }
+}
+
 public class RunLengthEncoding implements Iterable {
 
   /**
    *  Define any variables associated with a RunLengthEncoding object here.
    *  These variables MUST be private.
    */
-
-
+  private int width;
+  private int height;
+  private DList encoding;
 
 
   /**
@@ -48,6 +79,12 @@ public class RunLengthEncoding implements Iterable {
 
   public RunLengthEncoding(int width, int height) {
     // Your solution here.
+    this.width = width;
+    this.height = height;
+    EncodingItem item = new EncodingItem();
+    item.runLength = width * height;
+    encoding = new DList();
+    encoding.insertFront(item);
   }
 
   /**
@@ -74,6 +111,16 @@ public class RunLengthEncoding implements Iterable {
   public RunLengthEncoding(int width, int height, int[] red, int[] green,
                            int[] blue, int[] runLengths) {
     // Your solution here.
+    this.width = width;
+    this.height = height;
+    encoding = new DList();
+    int index = 0;
+    for (int i = 0; i < runLengths.length; i++) {
+        EncodingItem item = new EncodingItem(index, runLengths[i], red[i], green[i], blue[i]);
+        encoding.insertEnd(item);
+        index += runLengths[i];
+    }
+    assert index == width * height;
   }
 
   /**
@@ -85,7 +132,7 @@ public class RunLengthEncoding implements Iterable {
 
   public int getWidth() {
     // Replace the following line with your solution.
-    return 1;
+    return width;
   }
 
   /**
@@ -96,7 +143,7 @@ public class RunLengthEncoding implements Iterable {
    */
   public int getHeight() {
     // Replace the following line with your solution.
-    return 1;
+    return height;
   }
 
   /**
@@ -108,7 +155,7 @@ public class RunLengthEncoding implements Iterable {
    */
   public RunIterator iterator() {
     // Replace the following line with your solution.
-    return null;
+    return new RunIterator(encoding.getHead());
     // You'll want to construct a new RunIterator, but first you'll need to
     // write a constructor in the RunIterator class.
   }
@@ -121,7 +168,20 @@ public class RunLengthEncoding implements Iterable {
    */
   public PixImage toPixImage() {
     // Replace the following line with your solution.
-    return new PixImage(1, 1);
+    PixImage image = new PixImage(width, height);
+    RunIterator iter = iterator();
+    int index = 0;
+    while (iter.hasNext()) {
+        int[] item = iter.next();
+        for (int i = 0; i < item[0]; i++) {
+            int x = index % width;
+            int y = index / width;
+            image.setPixel(x, y, (short)item[1], (short)item[2], (short)item[3]);
+            index++;
+        }
+    }
+
+    return image;
   }
 
   /**
@@ -135,7 +195,15 @@ public class RunLengthEncoding implements Iterable {
    */
   public String toString() {
     // Replace the following line with your solution.
-    return "";
+    String str = "{";
+    DListNode current = encoding.getHead();
+    while (current.next.item != null) {
+        current = current.next;
+        EncodingItem item = (EncodingItem)current.item;
+        str += "[" + item.index + "," + item.runLength + "," + item.red + "," +
+            item.green + "," + item.blue + "]\n";
+    }
+    return str + "}";
   }
 
 
@@ -155,6 +223,32 @@ public class RunLengthEncoding implements Iterable {
   public RunLengthEncoding(PixImage image) {
     // Your solution here, but you should probably leave the following line
     // at the end.
+    encoding = new DList();
+    width = image.getWidth();
+    height = image.getHeight();
+
+    int index = 0;
+    int runLength = 0;
+    int red = image.getRed(0, 0);
+    int green = image.getGreen(0, 0);
+    int blue = image.getBlue(0, 0);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            if (red != image.getRed(x, y) || green != image.getGreen(x, y)
+                    || blue != image.getBlue(x, y)) {
+                EncodingItem item = new EncodingItem(index, runLength, red, green, blue);
+                encoding.insertEnd(item);
+                index += runLength;
+                runLength = 0;
+                red = image.getRed(x, y);
+                green = image.getGreen(x, y);
+                blue = image.getBlue(x, y);
+            }
+            runLength++;
+        }
+    }
+    EncodingItem item = new EncodingItem(index, runLength, red, green, blue);
+    encoding.insertEnd(item);
     check();
   }
 
@@ -165,6 +259,28 @@ public class RunLengthEncoding implements Iterable {
    */
   public void check() {
     // Your solution here.
+    if (encoding.size == 0) {
+        Thread.dumpStack();
+        System.exit(0);
+    }
+    RunIterator iter = iterator();
+    int[] oldItem = iter.next();
+    int[] newItem;
+    int size = oldItem[0];
+    while (iter.hasNext()) {
+        newItem = iter.next();
+        if (newItem[0] == oldItem[0] && newItem[1] == oldItem[1] && newItem[2] == oldItem[2]) {
+            Thread.dumpStack();
+            System.exit(0);
+        }
+        size += newItem[0];
+        oldItem = newItem;
+    }
+    
+    if (size != width * height) {
+        Thread.dumpStack();
+        System.exit(0);
+    }
   }
 
 
@@ -188,9 +304,78 @@ public class RunLengthEncoding implements Iterable {
   public void setPixel(int x, int y, short red, short green, short blue) {
     // Your solution here, but you should probably leave the following line
     //   at the end.
+    
+    // find node
+    int index = y * getWidth() + x;
+    DListNode node = encoding.getHead();
+    while (node.next.item != null) {
+        node = node.next;
+        EncodingItem item = (EncodingItem)node.item;
+        int begin = item.index;
+        int end = begin + item.runLength;
+        if (index >= begin && index < end) {
+            break;
+        }
+    }
+
+    System.out.println("node: " + node.item);
+    System.out.println(x + "," + y + "," + red);
+    
+    EncodingItem item = (EncodingItem)node.item;
+    if ((item.red == red) && (item.green == green) && (item.blue == blue)) {
+        return;
+    }
+
+    // split
+    // case 1: only one run, no split
+    if (item.runLength == 1) {
+       item.red = red;
+       item.green = green;
+       item.blue = blue;
+    } else {
+        // case 2: split first node
+        if (index == item.index) {
+            EncodingItem newItem = new EncodingItem(index, 1, red, green, blue);
+            encoding.insertBefore(node, newItem);
+            item.index++;
+            item.runLength--;
+        } // case 3: split last node
+        else if (index == item.index + item.runLength - 1) {
+            EncodingItem newItem = new EncodingItem(index, 1, red, green, blue);
+            encoding.insertAfter(node, newItem);
+            item.runLength--;
+        }
+        // case 4: split middle node
+        else if (index != item.index && index != item.index + item.runLength - 1) {
+            EncodingItem newItem = new EncodingItem(index + 1, 
+                    item.index + item.runLength-index -1, item.red, item.green, item.blue);
+            encoding.insertAfter(node, newItem);
+
+            newItem = new EncodingItem(index, 1, red, green, blue);
+            encoding.insertAfter(node, newItem);
+
+            item.runLength = index - item.index;
+        } 
+    }
+
+    
+    // merge
+    DListNode current = encoding.getHead().next;
+    while (current.next.item != null) {
+        if (isColorEquel((EncodingItem)current.item, (EncodingItem)current.next.item)) {
+            ((EncodingItem)current.item).runLength += ((EncodingItem)current.next.item).runLength;
+            encoding.removeAfter(current);
+        } else {
+            current = current.next;
+        }
+    }
+
     check();
   }
 
+  private boolean isColorEquel(EncodingItem l, EncodingItem r) {
+      return (l.red == r.red) && (l.green == r.green) && (l.blue == r.blue);
+  }
 
   /**
    * TEST CODE:  YOU DO NOT NEED TO FILL IN ANY METHODS BELOW THIS POINT.
