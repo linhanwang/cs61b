@@ -52,7 +52,7 @@ public class DList {
    */
   public DList() {
     //  Your solution here.
-    head = new DListNode(null, null, null);
+    head = newNode(null, null, null);
     head.next = head;
     head.prev = head;
     size = 0;
@@ -83,7 +83,7 @@ public class DList {
    */
   public void insertFront(Object item) {
     // Your solution here.
-    DListNode node = new DListNode(item, head, head.next);
+    DListNode node = newNode(item, head, head.next);
     head.next.prev = node;
     head.next = node;
     size++;
@@ -96,7 +96,7 @@ public class DList {
    */
   public void insertBack(Object item) {
     // Your solution here.
-    DListNode node = new DListNode(item, head.prev, head);
+    DListNode node = newNode(item, head.prev, head);
     head.prev.next = node;
     head.prev = node;
     size++;
@@ -189,7 +189,7 @@ public class DList {
         return;
     }
 
-    DListNode newNode = new DListNode(item, node, node.next);
+    DListNode newNode = newNode(item, node, node.next);
     node.next.prev = newNode;
     node.next = newNode;
     size++;
@@ -208,7 +208,7 @@ public class DList {
         return;
     }
 
-    DListNode newNode = new DListNode(item, node.prev, node);
+    DListNode newNode = newNode(item, node.prev, node);
     node.prev.next = newNode;
     node.prev = newNode;
     size++;
