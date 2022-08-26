@@ -52,6 +52,10 @@ public class DList {
    */
   public DList() {
     //  Your solution here.
+    head = new DListNode(null, null, null);
+    head.next = head;
+    head.prev = head;
+    size = 0;
   }
 
   /**
@@ -79,6 +83,10 @@ public class DList {
    */
   public void insertFront(Object item) {
     // Your solution here.
+    DListNode node = new DListNode(item, head, head.next);
+    head.next.prev = node;
+    head.next = node;
+    size++;
   }
 
   /**
@@ -88,6 +96,10 @@ public class DList {
    */
   public void insertBack(Object item) {
     // Your solution here.
+    DListNode node = new DListNode(item, head.prev, head);
+    head.prev.next = node;
+    head.prev = node;
+    size++;
   }
 
   /**
@@ -101,6 +113,11 @@ public class DList {
    */
   public DListNode front() {
     // Your solution here.
+    if (isEmpty()) {
+        return null;
+    }
+
+    return head.next;
   }
 
   /**
@@ -114,6 +131,11 @@ public class DList {
    */
   public DListNode back() {
     // Your solution here.
+    if (isEmpty()) {
+        return null;
+    }
+
+    return head.prev;
   }
 
   /**
@@ -128,6 +150,11 @@ public class DList {
    */
   public DListNode next(DListNode node) {
     // Your solution here.
+    if (node == null || node.next.item == null) {
+        return null;
+    }
+
+    return node.next;
   }
 
   /**
@@ -142,6 +169,11 @@ public class DList {
    */
   public DListNode prev(DListNode node) {
     // Your solution here.
+    if (node == null || node.prev.item == null) {
+        return null;
+    }
+
+    return node.prev;
   }
 
   /**
@@ -153,6 +185,14 @@ public class DList {
    */
   public void insertAfter(Object item, DListNode node) {
     // Your solution here.
+    if (node == null) {
+        return;
+    }
+
+    DListNode newNode = new DListNode(item, node, node.next);
+    node.next.prev = newNode;
+    node.next = newNode;
+    size++;
   }
 
   /**
@@ -164,6 +204,14 @@ public class DList {
    */
   public void insertBefore(Object item, DListNode node) {
     // Your solution here.
+    if (node == null) {
+        return;
+    }
+
+    DListNode newNode = new DListNode(item, node.prev, node);
+    node.prev.next = newNode;
+    node.prev = newNode;
+    size++;
   }
 
   /**
@@ -172,6 +220,13 @@ public class DList {
    */
   public void remove(DListNode node) {
     // Your solution here.
+    if (node == null) {
+        return;
+    }
+
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+    size--;
   }
 
   /**
@@ -190,5 +245,37 @@ public class DList {
       current = current.next;
     }
     return result + "]";
+  }
+  
+  public static void main(String[] args) {
+    DList l = new DList();
+
+    System.out.println("empty should be true: " + l.isEmpty());
+    System.out.println("sentinel points to itself: " + (l.prev(l.head) == l.prev(l.head)));
+
+    l.insertFront(0);
+    l.insertFront(1);
+    l.insertFront(2);
+    l.insertFront(3);
+    System.out.println(l);
+    
+    l.insertBack(0);
+    l.insertBack(1);
+    l.insertBack(2);
+    l.insertBack(3);
+    System.out.println(l);
+    
+    DListNode front = l.front();
+    System.out.println("Front shoud be 3: " + front.item);
+    System.out.println("Front shoud be 3: " + l.back().item);
+    l.insertBefore(4, front);
+    l.insertAfter(5, front);
+    System.out.println(l);
+
+    l.remove(front);
+    System.out.println(l);
+
+    System.out.println("Length should be 9: " + l.length());
+    System.out.println("Node should be 2: " + l.prev(l.next(l.next(l.next(l.front())))).item);
   }
 }
