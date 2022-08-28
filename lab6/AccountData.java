@@ -54,6 +54,11 @@ public class AccountData implements Keyable {
    *  withdraw() reduces the balance by the withdrawal amount "amt".
    **/
   public void withdraw(int amt) {
+    if (amt < 0) {
+        System.out.println("Error: Withdraw negative amount: " + amt);
+        return;
+    }
+
     if (amt <= balance) {
       balance = balance - amt;
     } else {
