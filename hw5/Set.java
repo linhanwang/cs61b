@@ -8,6 +8,7 @@ import list.*;
  **/
 public class Set {
   /* Fill in the data fields here. */
+  List elements;
 
   /**
    * Set ADT invariants:
@@ -24,6 +25,7 @@ public class Set {
    **/
   public Set() { 
     // Your solution here.
+    elements = new DList();
   }
 
   /**
@@ -33,7 +35,7 @@ public class Set {
    **/
   public int cardinality() {
     // Replace the following line with your solution.
-    return 0;
+    return elements.length();
   }
 
   /**
@@ -46,6 +48,29 @@ public class Set {
    **/
   public void insert(Comparable c) {
     // Your solution here.
+    if (elements.isEmpty()) {
+        elements.insertFront(c);
+        return;
+    }
+    
+    try {
+        ListNode current = elements.front();
+        int res;
+        while (true) {
+            res = c.compareTo(current.item());
+            if (res == 0) return;
+            if (res < 0) {
+                current.insertBefore(c);
+                return;
+            }
+            if (!current.next().isValidNode()) break;
+            current = current.next();
+        }
+        current.insertAfter(c);
+    } catch (InvalidNodeException e) {
+        System.err.println(e);
+        return;
+    }
   }
 
   /**
@@ -65,6 +90,36 @@ public class Set {
    **/
   public void union(Set s) {
     // Your solution here.
+    if (cardinality() == 0 || s.cardinality() == 0) return;
+
+    ListNode l = elements.front();
+    ListNode r = s.elements.front();
+    while (l.isValidNode() && r.isValidNode()) {
+        try {
+            int res = ((Comparable)l.item()).compareTo(r.item());
+            if (res == 0) {
+                l = l.next();
+                r = r.next();
+            } else if (res < 0) {
+                l = l.next();
+            } else if (res > 0) {
+                l.insertBefore(r.item());
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+            return;
+        }
+    }
+
+    while (r.isValidNode()) {
+        try {
+            elements.insertBack(r.item());
+            r = r.next();
+        } catch (Exception e) {
+            System.err.println(e);
+            return;
+        }
+    }
   }
 
   /**
@@ -82,6 +137,31 @@ public class Set {
    **/
   public void intersect(Set s) {
     // Your solution here.
+    try {
+        ListNode l = elements.front();
+        ListNode r = s.elements.front();
+        while (l.isValidNode() && r.isValidNode()) {
+            int res = ((Comparable)l.item()).compareTo(r.item());
+            if (res == 0) {
+                l = l.next();
+                r = r.next();
+            } else if (res < 0) {
+                ListNode temp = l;
+                l = temp.next();
+                temp.remove();
+            } else {
+                r = r.next();
+            }
+        }
+
+        while (l.isValidNode()) {
+            ListNode temp = l;
+            l = temp.next();
+            temp.remove();
+        }
+    } catch (InvalidNodeException e) {
+        System.err.println(e);
+    }
   }
 
   /**
@@ -101,11 +181,23 @@ public class Set {
    **/
   public String toString() {
     // Replace the following line with your solution.
-    return "";
+    String res = "{";
+    ListNode node = elements.front();
+    while (node.isValidNode()) {
+        try {
+            res += node.item();
+            res += ",";
+            node = node.next();
+        } catch(InvalidNodeException e) {
+            System.err.println(e);
+        }
+    }
+    return res + "}";
   }
 
   public static void main(String[] argv) {
     Set s = new Set();
+    System.out.println("Before insert");
     s.insert(new Integer(3));
     s.insert(new Integer(4));
     s.insert(new Integer(3));
