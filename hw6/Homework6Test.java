@@ -55,11 +55,32 @@ public class Homework6Test {
     }
     HashTableChained table = new HashTableChained(numBoards);
     initTable(table, numBoards);
+    
+    table.printHist();
 
     // To test your hash function, add a method to your HashTableChained class
     // that counts the number of collisions--or better yet, also prints
     // a histograph of the number of entries in each bucket.  Call this method
     // from here.
+
+    // HashTableChained table = new HashTableChained(11);
+    // table.insert("linhan", "linhan wang");
+    // table.insert("ran", "ran lyu");
+
+    // System.out.println(table.find("linhan").value());
+    // System.out.println(table.find("ran").value());
+
+    // System.out.println(table.size());
+
+    // table.remove("haha");
+    // System.out.println(table.size());
+
+    // Entry entry = table.remove("linhan");
+    // System.out.println("remove " + entry.value());
+    // System.out.println(table.size());
+
+    // table.makeEmpty();
+    // System.out.println(table.size());
   }
 
 }
