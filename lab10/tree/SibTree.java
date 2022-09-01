@@ -257,6 +257,7 @@ public class SibTree extends Tree {
       System.out.println("  ERROR:  tree size is " + t.size() +
                          " but should be 5.");
     }
+
     try {
       r1 = r.child(1);
     } catch (Exception e) {
@@ -264,6 +265,7 @@ public class SibTree extends Tree {
     if (r1 != r2) {
       System.out.println("  ERROR:  after deleting Node r1, Node r2 has" +
                          " not become the first child of the root.");
+      System.out.println(r1);
     }
 
 

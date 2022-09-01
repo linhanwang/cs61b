@@ -78,7 +78,9 @@ class SibTreeNode extends TreeNode {
    */
   public TreeNode parent() throws InvalidNodeException {
     // REPLACE THE FOLLOWING LINE WITH YOUR SOLUTION TO PART I.
-    return null;
+    if (!isValidNode()) throw new InvalidNodeException();
+    if (myTree.root == this) return new SibTreeNode();
+    return parent;
   }
 
   /**
@@ -133,6 +135,27 @@ class SibTreeNode extends TreeNode {
    */
   public void insertChild(Object item, int c) throws InvalidNodeException {
     // FILL IN YOUR SOLUTION TO PART II HERE.
+    if (isValidNode()) {
+        myTree.size++;
+        SibTreeNode newNode = new SibTreeNode(myTree, item);
+        newNode.parent = this;
+        if ((c <= 1) || (firstChild == null)) {
+            newNode.nextSibling = firstChild;
+            firstChild = newNode;
+            return;
+        }
+
+        SibTreeNode kid = firstChild;
+        while ((kid.nextSibling != null) && (c > 2)) {
+            kid = kid.nextSibling;
+            c--;
+        }
+        
+        newNode.nextSibling = kid.nextSibling;
+        kid.nextSibling = newNode;
+    } else {
+        throw new InvalidNodeException();
+    }
   }
 
   /**
@@ -143,6 +166,33 @@ class SibTreeNode extends TreeNode {
    */
   public void removeLeaf() throws InvalidNodeException {
     // FILL IN YOUR SOLUTION TO PART III HERE.
+    if (!isValidNode()) {
+        throw new InvalidNodeException();
+    }
+
+    if (firstChild != null) return;
+
+    valid = false;
+    myTree.size--;
+    if (this == myTree.root) {
+        myTree.root = null;
+        return;
+    }
+
+    if (parent.firstChild == this) {
+        parent.firstChild = nextSibling;
+        return;
+    }
+
+    SibTreeNode kid = parent.firstChild;
+    while (kid.nextSibling != this) {
+        kid = kid.nextSibling;    
+    }
+
+    kid.nextSibling = nextSibling;
   }
 
+  public String toString() {
+      return "" + item;
+  }
 }
