@@ -94,6 +94,76 @@ public class Tree234 extends IntDictionary {
     return false;
   }
 
+  private void insertEntry(Tree234Node node, int key, int cnt) {
+      size++;
+      node.keys++;
+      if (cnt == 1) {
+        node.key3 = node.key2;
+        node.key2 = node.key1;
+        node.key1 = key;
+      } else if (cnt == 2) {
+        node.key3 = node.key2;
+        node.key2 = key;
+      } else if (cnt == 3) {
+        node.key3 = key;
+      }
+  }
+
+  /**
+   *  keys == 1,2
+   * */
+  private void insertParent(Tree234Node p, int key, Tree234Node c) {
+    if (p.keys == 1) {
+        if (key > p.key1) {
+            p.key2 = key;
+            p.child3 = c;
+        } else {
+            p.key2 = p.key1;
+            p.key1 = key;
+            p.child3 = p.child2;
+            p.child2 = c;
+        }
+    }
+
+    if (p.keys == 2) {
+        if (key < p.key1) {
+            p.key3 = p.key2;
+            p.key2 = p.key1;
+            p.key1 = key;
+            p.child4 = p.child3;
+            p.child3 = p.child2;
+            p.child2 = c;
+        } else if (key > p.key2) {
+            p.key3 = key;
+            p.child4 = c;
+        } else {
+            p.key3 = p.key2;
+            p.key2 = key;
+            p.child4 = p.child3;
+            p.child3 = c;
+        }
+    }
+
+    p.keys++;
+  }
+
+  /**
+   * keys == 1,2
+   * */
+  private void insertLeafAndChangeSize(Tree234Node node, int key) {
+    if (key < node.key1) {
+        insertEntry(node, key, 1);
+    } else if (key == node.key1) {
+        return;
+    } else if ((node.keys == 1) || (key < node.key2)) {
+        insertEntry(node, key, 2);
+    } else if (key == node.key2) {
+        return;
+    } else {
+        insertEntry(node, key, 3);
+    }
+  }
+
   /**
    *  insert() inserts the key "key" into this 2-3-4 tree.  If "key" is
    *  already present, a duplicate copy is NOT inserted.
@@ -102,6 +172,69 @@ public class Tree234 extends IntDictionary {
    **/
   public void insert(int key) {
     // Fill in your solution here.
+    if (root == null) {
+        root = new Tree234Node(null, key);
+        return;
+    }
+    Tree234Node node = root;
+    while (node != null) {
+        // leaf node
+        if ((node.child1 == null) && (node.keys != 3)) {
+            insertLeafAndChangeSize(node, key);
+            return;
+        }
+        
+        // internal node has 3 keys
+        if (node.keys == 3) {
+            if (node == root) {
+                Tree234Node newRoot = new Tree234Node(null, node.key2);
+                Tree234Node newChild = new Tree234Node(newRoot, node.key3);
+                root = newRoot;
+                newRoot.child1 = node;
+                newRoot.child2 = newChild;
+
+                newChild.child1 = node.child3;
+                if (newChild.child1 != null) newChild.child1.parent = newChild;
+                newChild.child2 = node.child4;
+                if (newChild.child2 != null) newChild.child2.parent = newChild;
+               
+                node.parent = newRoot;
+                node.keys = 1;
+                node.child3 = null;
+                node.child4 = null;
+
+                node = newRoot;
+            } else {
+                Tree234Node newNode = new Tree234Node(node.parent, node.key3);
+                newNode.child1 = node.child3;
+                if (newNode.child1 != null) newNode.child1.parent = newNode;
+                newNode.child2 = node.child4;
+                if (newNode.child2 != null) newNode.child2.parent = newNode;
+                
+                node.keys = 1;
+                node.child3 = null;
+                node.child4 = null;
+
+                insertParent(node.parent, node.key2, newNode);
+                node = node.parent;
+            }
+        }
+
+        // normal internal node
+        if (key < node.key1) {
+            node = node.child1;
+        } else if (key == node.key1) {
+            return;
+        } else if ((node.keys == 1) || (key < node.key2)) {
+            node = node.child2;
+        } else if ((node.keys == 2) || (key < node.key3)) {
+            node = node.child3;
+        } else if (key == node.key3) {
+            return;
+        } else {
+            node = node.child4;
+        }
+    }
   }
 
 

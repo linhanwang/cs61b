@@ -52,6 +52,10 @@ class Tree234Node {
    *  DO NOT CHANGE THIS METHOD.
    **/
   public String toString() {
+    if ((child1 != null) && (child1.parent != this)) System.out.println("!!!" + key1);
+    if ((child2 != null) && (child2.parent != this)) System.out.println("!!!" + key1);
+    if ((child3 != null) && (child3.parent != this)) System.out.println("!!!" + key1);
+    if ((child4 != null) && (child4.parent != this)) System.out.println("!!!" + key1);
     String s = "";
 
     if (child1 != null) {
