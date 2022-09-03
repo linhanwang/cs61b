@@ -160,7 +160,68 @@ public class BinaryTree implements Dictionary {
    **/
   public Entry remove(Object key) {
     // Replace the following line with your solution.
-    return null;
+    if (root == null) return null;
+    
+    BinaryTreeNode node = findHelper((Comparable)key, root);
+    
+    if (node == null) return null;
+
+    size--;
+   
+    if ((node.leftChild == null) && (node.rightChild == null)) {
+        if (node == root) {
+            root = null;
+        } else {
+            if (node.parent.rightChild == node) {
+                node.parent.rightChild = null;
+            } else {
+                node.parent.leftChild = null;
+            }
+        }
+        return node.entry;
+    }
+
+    if (node.leftChild == null) {
+        if (node == root) {
+            root = node.rightChild;
+        } else if (node.parent.rightChild == node) {
+            node.parent.rightChild = node.rightChild;
+        } else {
+            node.parent.leftChild = node.rightChild;
+        }
+        node.rightChild.parent = node.parent;
+        return node.entry;
+    }
+
+    if (node.rightChild == null) {
+        if (node == root) {
+            root = node.leftChild;
+        } else if (node.parent.rightChild == node) {
+            node.parent.rightChild = node.leftChild;
+        } else {
+            node.parent.leftChild = node.leftChild;
+        }
+        node.leftChild.parent = node.parent;
+        return node.entry;
+    }
+
+    BinaryTreeNode rightMin = node.rightChild;
+    while (rightMin.leftChild != null) {
+        rightMin = rightMin.leftChild;
+    }
+
+    Entry res = node.entry;
+    node.entry = rightMin.entry;
+    if (rightMin.parent.leftChild == rightMin) {
+        rightMin.parent.leftChild = rightMin.rightChild; 
+    } else {
+        rightMin.parent.rightChild = rightMin.rightChild;
+    }
+    if (rightMin.rightChild != null) {
+        rightMin.rightChild.parent = rightMin.parent;
+    } 
+
+    return res;
   }
 
   /**
