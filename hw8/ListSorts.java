@@ -83,6 +83,21 @@ public class ListSorts {
                                LinkedQueue qSmall, LinkedQueue qEquals, 
                                LinkedQueue qLarge) {
     // Your solution here.
+    try {
+        while (!qIn.isEmpty()) {
+            Object item = qIn.dequeue();
+            int cmp = pivot.compareTo(item);
+            if (cmp < 0) {
+                qLarge.enqueue(item);
+            } else if (cmp > 0) {
+                qSmall.enqueue(item);
+            } else {
+                qEquals.enqueue(item);
+            }
+        }
+    } catch (Exception e) {
+        System.err.println(e);
+    }
   }
 
   /**
@@ -113,6 +128,23 @@ public class ListSorts {
    **/
   public static void quickSort(LinkedQueue q) {
     // Your solution here.
+    if (q.size() <= 1) return;
+
+    int index = Integer.valueOf((int)(q.size() * Math.random()));
+    Object pivot = q.nth(index + 1);
+    
+    LinkedQueue qSmall = new LinkedQueue();
+    LinkedQueue qLarge = new LinkedQueue();
+    LinkedQueue qEquals = new LinkedQueue();
+
+    partition(q, (Comparable)pivot, qSmall, qEquals, qLarge);
+
+    quickSort(qSmall);
+    quickSort(qLarge);
+    
+    q.append(qSmall);
+    q.append(qEquals);
+    q.append(qLarge);
   }
 
   /**
