@@ -15,7 +15,19 @@ public class ListSorts {
    **/
   public static LinkedQueue makeQueueOfQueues(LinkedQueue q) {
     // Replace the following line with your solution.
-    return null;
+    LinkedQueue res = new LinkedQueue();
+    while (!q.isEmpty()) {
+        try {
+            Object item = q.dequeue();
+            LinkedQueue newQ = new LinkedQueue();
+            newQ.enqueue(item);
+            res.enqueue(newQ);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    return res;
   }
 
   /**
@@ -31,7 +43,27 @@ public class ListSorts {
    **/
   public static LinkedQueue mergeSortedQueues(LinkedQueue q1, LinkedQueue q2) {
     // Replace the following line with your solution.
-    return null;
+    LinkedQueue res = new LinkedQueue();
+    try {
+        while ((!q1.isEmpty()) && (!q2.isEmpty())) {
+            if (((Comparable)q1.front()).compareTo(q2.front()) <= 0) {
+                res.enqueue(q1.dequeue());
+            } else {
+                res.enqueue(q2.dequeue());
+            }
+        }
+
+        if (!q1.isEmpty()) {
+            res.append(q1);
+        }
+
+        if (!q2.isEmpty()) {
+            res.append(q2);
+        }
+    } catch (Exception e) {
+        System.err.println(e);
+    }
+    return res;
   }
 
   /**
@@ -59,6 +91,20 @@ public class ListSorts {
    **/
   public static void mergeSort(LinkedQueue q) {
     // Your solution here.
+    LinkedQueue qoq = makeQueueOfQueues(q);
+    try {
+        while (qoq.size() > 1) {
+            LinkedQueue q1 = (LinkedQueue)qoq.dequeue();
+            LinkedQueue q2 = (LinkedQueue)qoq.dequeue();
+            qoq.enqueue(mergeSortedQueues(q1, q2));
+        }
+        if (qoq.size() == 1) {
+            LinkedQueue qSorted = (LinkedQueue)qoq.dequeue();
+            q.append(qSorted);
+        }
+    } catch (Exception e) {
+        System.err.println(e);
+    }
   }
 
   /**
