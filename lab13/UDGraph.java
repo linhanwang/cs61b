@@ -113,9 +113,9 @@ public class UDGraph
    *  @return the new UDGraph.
    */
   public UDGraph length2Paths() {
-    UDGraph newGraph = new UDGraph(vertices);
+    // UDGraph newGraph = new UDGraph(vertices);
     // Put your answer to Part I here.
-    return newGraph;
+    return paths(2);
   }
 
   /**
@@ -128,7 +128,23 @@ public class UDGraph
   public UDGraph paths(int length) {
     UDGraph newGraph = new UDGraph(vertices);
     // Put your answer to Part II here.
+    for (int v = 0; v < vertices; ++v) {
+        dfs(newGraph, v, v, length);
+    } 
+    
     return newGraph;
+  }
+
+  private void dfs(UDGraph newG, int v, int o, int length) {
+    if (length == 0) return;
+
+    for (int d = 0; d < vertices; ++d) {
+        if (hasEdge(o, d)) {
+            if (length == 1) newG.addEdge(v, d);
+
+            dfs(newG, v, d, length - 1);
+        }
+    }
   }
 
   /**
