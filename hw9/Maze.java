@@ -78,8 +78,53 @@ public class Maze {
      * is run, so that you can make lots of different mazes.
      **/
 
+    int[] array = new int[horiz * (vert - 1) + (horiz - 1) * vert];
+    for (i = 0; i < array.length; ++i) {
+        array[i] = i;
+    }
 
+    for (i = array.length - 1; i > 0; --i) {
+        int index = randInt(i + 1);
+        swapReference(array, index, i);
+    }
 
+    DisjointSets disjointSets = new DisjointSets(horiz * vert);
+    for (i = 0; i < array.length; ++i) {
+        Wall wall = idToWall(array[i]);
+        System.out.println(array[i] + " " + wall);
+        if (wall.isHoriz) {
+            int left = wall.x * vert + wall.y;
+            int right = wall.x * vert + wall.y + 1;
+            if (disjointSets.find(left) == disjointSets.find(right)) continue;
+            disjointSets.union(disjointSets.find(left), disjointSets.find(right));
+            hWalls[wall.x][wall.y] = false;
+        } else {
+            int up = wall.x * vert + wall.y;
+            int down = (wall.x + 1) * vert + wall.y;
+            if (disjointSets.find(up) == disjointSets.find(down)) continue;
+            disjointSets.union(disjointSets.find(up), disjointSets.find(down));
+            vWalls[wall.x][wall.y] = false;
+        }
+    }
+  }
+
+  private void swapReference(int[] a, int l, int r) {
+    int tmp = a[l];
+    a[l] = a[r];
+    a[r] = tmp;
+  }
+
+  private Wall idToWall(int id) {
+    if (id < horiz * (vert - 1)) {
+        int y = id % (vert - 1);
+        int x = id / (vert - 1);
+        return new Wall(x, y, true);
+    } else {
+        id = id - horiz * (vert - 1);
+        int y = id % vert;
+        int x = id / vert;
+        return new Wall(x, y, false);
+    }
   }
 
   /**
