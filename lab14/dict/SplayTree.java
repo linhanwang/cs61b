@@ -178,6 +178,8 @@ public class SplayTree implements Dictionary {
    **/
   private void zigZig(BinaryTreeNode node) {
     // Write your solution to Part I of the lab here.
+    zig(node.parent);
+    zig(node);
   }
 
   /**
@@ -190,7 +192,17 @@ public class SplayTree implements Dictionary {
     // When you do Part II of the lab, please replace the following faulty code
     // with your solution.
     while (node.parent != null) {
-      zig(node);
+        if (node.parent.parent == null) {
+            zig(node);
+        } else if ((node.parent.leftChild == node) && 
+                (node.parent.parent.leftChild == node.parent)) {
+            zigZig(node);
+        } else if ((node.parent.rightChild == node) && 
+                (node.parent.parent.rightChild == node.parent)) {
+            zigZig(node);
+        } else {
+            zigZag(node);
+        }
     }
     // The following line isn't really necessary, as the rotations update the
     // root correctly if splayNode() successfully splays "node" to the root,
