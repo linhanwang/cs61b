@@ -61,7 +61,10 @@ public class Sorts {
    **/
   public static int[] radixSort(int[] keys) {
     // Replace the following line with your solution.
-    return null;
+    for (int i = 0; i <= 7; ++i) {
+        keys = countingSort(keys, i);
+    }
+    return keys;
   }
 
   /**
