@@ -26,7 +26,28 @@ public class Sorts {
    **/
   public static int[] countingSort(int[] keys, int whichDigit) {
     // Replace the following line with your solution.
-    return null;
+    int[] counts = new int[16];
+    int shift = whichDigit * 4;
+    for (int i = 0; i < keys.length; i++) {
+        int num = (keys[i] >> shift) & 0xf;
+        counts[num]++;
+    }
+
+    int total = 0;
+    for (int i = 0; i < counts.length; ++i) {
+        int c = counts[i];
+        counts[i] = total;
+        total = total + c;
+    }
+
+    int[] res = new int[keys.length];
+    for (int i = 0; i < keys.length; i++) {
+        int num = (keys[i] >> shift) & 0xf;
+        res[counts[num]] = keys[i];
+        counts[num]++;
+    }
+
+    return res;
   }
 
   /**
@@ -82,7 +103,15 @@ public class Sorts {
                    Integer.parseInt("52953fdb", 16),
                    Integer.parseInt("40013879", 16) };
 
+    System.out.println(Integer.toString(Integer.parseInt("41234567", 16) >>> (7 * 4), 16));
+
     yell(keys);
+
+    // add by linhan
+    yell(countingSort(keys, 0));
+    yell(countingSort(keys, 6));
+    yell(countingSort(keys, 7));
+
     keys = radixSort(keys);
     yell(keys);
   }
