@@ -17,7 +17,7 @@ import list.*;
  **/
 
 public class HashTableChained implements Dictionary {
-
+  private static final double kLoadFactorThreshold = 1.0;
   /**
    *  Place any data fields here.
    **/
@@ -139,7 +139,33 @@ public class HashTableChained implements Dictionary {
     buckets[index].insertFront(entry);
    
     size++;
+    if (loadFactor() > kLoadFactorThreshold) {
+        rehash();
+    }
     return entry;
+  }
+
+  private void rehash() {
+    System.out.println("Before rehash, loadFactor=" + loadFactor());
+    List[] oldBuckets = buckets;
+    buckets = new DList[searchNearestPrime(2 * oldBuckets.length)];
+    size = 0;
+    
+    for (int i = 0; i < oldBuckets.length; ++i) {
+        if (oldBuckets[i] == null) continue;
+
+        ListNode cur = oldBuckets[i].front();
+        while (cur.isValidNode()) {
+            try {
+                Entry entry = (Entry)cur.item();
+                insert(entry.key(), entry.value());
+                cur = cur.next();
+            } catch (Exception e) {
+                System.err.println(e);
+            }
+        }
+    }
+    System.out.println("After rehash, loadFactor=" + loadFactor());
   }
 
   /** 
@@ -226,7 +252,11 @@ public class HashTableChained implements Dictionary {
     }
     size = 0;
   }
-  
+ 
+  public double loadFactor() {
+    return ((double)size) / buckets.length;
+  }
+
   public void printHist() {
     int collisions = 0;
     String str = "{";
@@ -244,5 +274,16 @@ public class HashTableChained implements Dictionary {
 
     System.out.println(str + "} buckets: " + buckets.length + " collisions: " 
             + collisions);
+  }
+
+  public static void main(String[] args) {
+    Dictionary dict = new HashTableChained(5);
+    for (int i = 0; i < 10; ++i) {
+        dict.insert(Integer.valueOf(i), Integer.valueOf(i));
+    }
+    System.out.println(dict.find(Integer.valueOf(3)).key() + " should be 3");
+    System.out.println(dict.find(Integer.valueOf(6)).key() + " should be 6");
+    System.out.println(dict.find(Integer.valueOf(9)).key() + " should be 9");
+    System.out.println(dict.find(Integer.valueOf(10)) + " should be null");
   }
 }
