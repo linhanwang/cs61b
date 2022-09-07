@@ -21,24 +21,12 @@ public class Homework3 {
   public static void smoosh(int[] ints) {
     // Fill in your solution here.  (Ours is twelve lines long, not counting
     // blank lines or lines already present in this file.)
-    int fast = 1, slow = 0;
+    int slow = 1, fast = 1;
     while (fast < ints.length) {
-        if (ints[fast] == ints[slow]) {
-            ints[fast] = -1;
-            fast++;
-        } else {
-            slow = fast;
-            fast = slow + 1;
-        }
-    }
-
-    fast = 0;
-    slow = 0;
-    while (fast < ints.length) {
+        while ((fast < ints.length) && (ints[fast] == ints[fast-1])) ++fast;
+        if (fast >= ints.length) break;
         ints[slow++] = ints[fast++];
-        while ((fast < ints.length) && (ints[fast] == -1)) fast++;
     }
-
     while (slow < ints.length) ints[slow++] = -1;
   }
 
