@@ -228,16 +228,21 @@ public class HashTableChained implements Dictionary {
   }
   
   public void printHist() {
+    int collisions = 0;
     String str = "{";
     for (int i = 0; i < buckets.length; i++) {
         if (buckets[i] == null) {
             str += "0";
         } else {
             str += buckets[i].length();
+            if (buckets[i].length() > 1) {
+                collisions = collisions + buckets[i].length() - 1;
+            }
         }
         str += ",";
     }
 
-    System.out.println(str + "} " + buckets.length);
+    System.out.println(str + "} buckets: " + buckets.length + " collisions: " 
+            + collisions);
   }
 }
