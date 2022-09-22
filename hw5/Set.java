@@ -104,6 +104,7 @@ public class Set {
                 l = l.next();
             } else if (res > 0) {
                 l.insertBefore(r.item());
+                r = r.next();
             }
         } catch (Exception e) {
             System.err.println(e);
@@ -201,18 +202,25 @@ public class Set {
     s.insert(new Integer(3));
     s.insert(new Integer(4));
     s.insert(new Integer(3));
+    s.insert(new Integer(6));
+    s.insert(new Integer(20));
+    s.insert(new Integer(10));
     System.out.println("Set s = " + s);
 
     Set s2 = new Set();
     s2.insert(new Integer(4));
     s2.insert(new Integer(5));
     s2.insert(new Integer(5));
+    s2.insert(new Integer(15));
+    s2.insert(new Integer(13));
     System.out.println("Set s2 = " + s2);
 
     Set s3 = new Set();
     s3.insert(new Integer(5));
     s3.insert(new Integer(3));
     s3.insert(new Integer(8));
+    s3.insert(new Integer(9));
+    s3.insert(new Integer(11));
     System.out.println("Set s3 = " + s3);
 
     s.union(s2);
